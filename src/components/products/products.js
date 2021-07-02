@@ -1,13 +1,13 @@
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { addToCart } from '../../store/products';
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 
 const Products = props => {
-    return(
+    return (
         <>
             <Typography variant='h2'>
                 {props.activeCategory.displayName}
@@ -17,25 +17,34 @@ const Products = props => {
             </Typography>
             <div className='products-container'>
                 {props.productsList.map((product, idx) => (
-                    <div className='product'>
-                        <img src={product.img} alt={product.name}/>
+                    <div className='product' key={idx}>
+                        <img src={product.img} alt={product.name} />
                         <Typography variant='h4' >
                             {product.name}
                         </Typography>
-                        <Button 
+                        {product.count ? (<Button
+                            onClick={() => { props.addToCart(product) }}
                             startIcon={<ShoppingCartIcon />}
                             size='small'
                             variant='contained'
                             color='primary'>
                             ADD TO CART
-                        </Button>
-                        <Button 
-                            startIcon={<VisibilityIcon />} 
-                            size='small' 
-                            variant='contained' 
+                        </Button>) : (<Button
+                            disabled
+                            startIcon={<ShoppingCartIcon />}
+                            size='small'
+                            variant='contained'
+                            color='primary'>
+                            Out of Stuck
+                        </Button>)}
+
+                        <Button
+                            startIcon={<VisibilityIcon />}
+                            size='small'
+                            variant='contained'
                             color='secondary'>
                             VIEW DETAILS
-                        </Button> 
+                        </Button>
                     </div>
                 ))}
             </div>
@@ -48,4 +57,6 @@ const mapStateToProps = state => ({
     activeCategory: state.categoriesReducer.activeCategory
 });
 
-export default connect(mapStateToProps)(Products);
+const mapDispatchToProps = { addToCart };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Products);

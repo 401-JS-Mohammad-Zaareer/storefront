@@ -6,7 +6,7 @@ const initialState = {
             name: 'Tomato',
             description: 'delicious and natural 100%',
             price: 0.15,
-            count: 2755,
+            count: 3261,
             img: '/assets/tomato.jpg'
         },
         {
@@ -46,7 +46,24 @@ export default function productsReducer(state=initialState, action) {
                 return product.category === payload;
             });
             return {products};
+        case 'ADD_TO_CART':
+            const productsAfterAdding = state.products.map((product) =>{
+                if(product.name === payload.name) {
+                   product = {...product, count: product.count - 1};
+                   return product;
+                }
+                return product;
+            });
+            return {products: productsAfterAdding};
         default: 
-            return {products: []}
+            return {products: []};
+    }
+}
+
+// actions
+export const addToCart = (product) => {
+    return {
+        type: 'ADD_TO_CART',
+        payload: product
     }
 }
